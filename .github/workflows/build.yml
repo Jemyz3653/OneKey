@@ -53,6 +53,22 @@ jobs:
           javap -p -cp "$CP" net.minecraft.world.entity.Entity | grep -i "invisib\|level()\|position()" >> api.txt
           grep -rl --include=*.class -a "getProjectionMatrix\|projectionMatrix" /tmp/mc | sed 's|/tmp/mc/||' | head -20 >> api.txt
 
+      - name: Client gametests (screenshots)
+        id: gametest
+        if: steps.build.outputs.code == '0'
+        timeout-minutes: 20
+        run: |
+          set +e
+          sudo apt-get update -qq && sudo apt-get install -y -qq mesa-vulkan-drivers > /dev/null
+          mkdir -p build/run/clientGameTest
+          echo "eula=true" > build/run/clientGameTest/eula.txt
+          printf 'version:4896\npreferredGraphicsBackend:"vulkan"\n' > build/run/clientGameTest/options.txt
+          ./gradlew runClientGameTest --no-daemon 2>&1 | tee gametest.log
+          echo "code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          mkdir -p shots
+          find build/run -path '*screenshots*' \( -name '*.png' -o -name 'notes.txt' \) -exec cp {} shots/ \;
+          exit 0
+
       - name: Upload jar
         if: steps.build.outputs.code == '0'
         uses: actions/upload-artifact@v4
@@ -60,11 +76,26 @@ jobs:
           name: OneKey
           path: build/libs/*
 
+      - name: Release
+        if: steps.build.outputs.code == '0' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(grep '^version=' gradle.properties | cut -d= -f2)
+          FILE="build/libs/onekey-${VERSION}.jar"
+          if gh release view "v${VERSION}" > /dev/null 2>&1; then
+            gh release upload "v${VERSION}" "$FILE" --clobber
+          else
+            gh release create "v${VERSION}" "$FILE" --target "${GITHUB_SHA}" --title "OneKey ${VERSION}" \
+              --notes "OneKey for Minecraft 26.3 (Fabric). Put the same jar on the server and on the clients of the players who should get it."
+          fi
+
       - name: Publish CI notes
         if: always()
         run: |
           set +e
-          mkdir -p /tmp/report && cp build.log api.txt /tmp/report/ && cp build/libs/*.jar /tmp/report/ 2>/dev/null
+          mkdir -p /tmp/report && cp build.log api.txt /tmp/report/; cp build/libs/*.jar /tmp/report/ 2>/dev/null; cp -r shots /tmp/report/ 2>/dev/null
+          grep -E "OneKeyTest|OneKey|ERROR|Exception|Mixin|mixin" gametest.log 2>/dev/null | grep -v "^\s*at " | head -300 > /tmp/report/gametest_excerpt.txt
           cd /tmp/report
           echo "build exit code: ${{ steps.build.outputs.code }} (${{ github.sha }})" > STATUS.txt
           git init -q -b ci-notes && git config user.name ci && git config user.email ci@users.noreply.github.com

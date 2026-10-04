@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import dev.jemyz.onekey.client.OneKeyClient;
@@ -21,7 +22,9 @@ abstract class EntityMixin {
 	private void onekey$seeInvisiblePlayers(Player viewer, CallbackInfoReturnable<Boolean> cir) {
 		Entity self = (Entity) (Object) this;
 
-		if (self instanceof Player
+		boolean target = self instanceof Player || (OneKeyClient.testAllLiving && self instanceof LivingEntity);
+
+		if (target
 				&& self != viewer
 				&& self.level().isClientSide()
 				&& viewer == Minecraft.getInstance().player

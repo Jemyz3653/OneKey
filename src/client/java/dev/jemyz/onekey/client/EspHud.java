@@ -6,6 +6,10 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -32,8 +36,9 @@ public final class EspHud {
 		Font font = mc.font;
 		Vec3 eye = mc.player.getEyePosition(pt);
 
-		for (Player other : mc.level.players()) {
-			if (other == mc.player || other.isSpectator() || !other.isAlive()) continue;
+		for (LivingEntity other : targets(mc)) {
+			if (other == mc.player || !other.isAlive()) continue;
+			if (other instanceof Player p && p.isSpectator()) continue;
 
 			double dx = Mth.lerp(pt, other.xo, other.getX()) - other.getX();
 			double dy = Mth.lerp(pt, other.yo, other.getY()) - other.getY();
@@ -63,6 +68,14 @@ public final class EspHud {
 		}
 	}
 
+	private static List<? extends LivingEntity> targets(Minecraft mc) {
+		if (OneKeyClient.testAllLiving) {
+			return mc.level.getEntitiesOfClass(LivingEntity.class, mc.player.getBoundingBox().inflate(96), e -> e != mc.player);
+		}
+
+		return new ArrayList<>(mc.level.players());
+	}
+
 	/** 1 px coloured rectangle with a dark 1 px outline on both sides, like CS. */
 	private static void frame(GuiGraphicsExtractor g, int x0, int y0, int x1, int y1, int color) {
 		rect(g, x0 - 1, y0 - 1, x1 + 1, y1 + 1, OUTLINE);
@@ -77,7 +90,7 @@ public final class EspHud {
 		g.fill(x1 - 1, y0 + 1, x1, y1 - 1, color);
 	}
 
-	private static void healthBar(GuiGraphicsExtractor g, Player p, int x, int y0, int y1) {
+	private static void healthBar(GuiGraphicsExtractor g, LivingEntity p, int x, int y0, int y1) {
 		float frac = Mth.clamp(p.getHealth() / Math.max(1f, p.getMaxHealth()), 0f, 1f);
 		int h = y1 - y0;
 		int filled = Math.round(h * frac);

@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"id": "onekey-test",
+	"version": "1.0.0",
+	"name": "OneKey client gametests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"dev.jemyz.onekey.test.OneKeyClientGameTest"
+		]
+	},
+	"depends": {
+		"onekey": "*"
+	}
+}

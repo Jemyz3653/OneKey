@@ -29,6 +29,9 @@ public final class OneKeyClient implements ClientModInitializer {
 	private static boolean lastWasAuto;
 	private static String lastSubmitted = "";
 
+	/** Client gametests only: treat every living entity like a player (there is just one real player in a test). */
+	public static volatile boolean testAllLiving;
+
 	private static boolean showBoxes = true;
 	private static boolean showInvisible = true;
 
