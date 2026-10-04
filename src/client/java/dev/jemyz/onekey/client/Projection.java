@@ -1,7 +1,6 @@
 package dev.jemyz.onekey.client;
 
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector4f;
 
 import net.minecraft.client.Camera;
@@ -24,14 +23,11 @@ final class Projection {
 	}
 
 	static Projection current(Minecraft mc, float partialTick, int guiW, int guiH) {
-		Camera camera = mc.gameRenderer.getMainCamera();
-		if (camera == null) return null;
+		Camera camera = mc.gameRenderer.mainCamera();
+		if (camera == null || !camera.isInitialized()) return null;
 
-		Matrix4f proj = CameraCapture.projection();
-		if (proj == null) return null;
-
-		Matrix4f view = new Matrix4f().rotation(new Quaternionf(camera.rotation()).conjugate());
-		Matrix4f viewProj = new Matrix4f(proj).mul(view);
+		// projection * view rotation of the frame being drawn (FOV effects, zoom etc. included)
+		Matrix4f viewProj = camera.getViewRotationProjectionMatrix(new Matrix4f());
 		return new Projection(viewProj, camera.position(), guiW, guiH);
 	}
 
