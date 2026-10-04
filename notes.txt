@@ -1,0 +1,11 @@
+key screen shown: true
+screenshot 1_key_screen
+screenshot 2_wrong_key
+active after wrong key: false
+server key: CMEB-FHNV
+active after right key: true
+screenshot 3_activated_esp
+screenshot 4_invisible_off
+screenshot 5_boxes_off
+active after /OneKey new: false
+screenshot 6_revoked

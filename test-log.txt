@@ -1,0 +1,11 @@
+[16:32:42] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] key screen shown: true
+[16:32:42] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] screenshot 1_key_screen
+[16:32:43] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] screenshot 2_wrong_key
+[16:32:43] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] active after wrong key: false
+[16:32:43] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] server key: CMEB-FHNV
+[16:32:44] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] active after right key: true
+[16:32:46] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] screenshot 3_activated_esp
+[16:32:46] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] screenshot 4_invisible_off
+[16:32:46] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] screenshot 5_boxes_off
+[16:32:47] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] active after /OneKey new: false
+[16:32:47] [Test thread/INFO] (Minecraft) [STDOUT]: [OneKeyTest] screenshot 6_revoked
