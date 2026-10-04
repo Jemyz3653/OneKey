@@ -31,28 +31,6 @@ jobs:
           echo "code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: API notes (signatures only)
-        if: always()
-        run: |
-          set +e
-          CP=$(find ~/.gradle/caches/fabric-loom -name '*.jar' 2>/dev/null | tr '\n' ':')
-          mkdir -p /tmp/mc && for j in $(find ~/.gradle/caches/fabric-loom/26.3 -name '*.jar'); do unzip -qo "$j" 'net/minecraft/*' -d /tmp/mc 2>/dev/null; done
-          : > api.txt
-          for pat in 'net/minecraft/client/Camera.class' 'net/minecraft/client/renderer/GameRenderer.class' \
-                     '*/CameraRenderState.class' '*/LevelRenderState.class' '*/GameRenderState.class' \
-                     'net/minecraft/client/gui/components/EditBox.class' 'net/minecraft/client/gui/screens/Screen.class' \
-                     'net/minecraft/client/multiplayer/ServerData.class' 'net/minecraft/client/Options.class' \
-                     'net/minecraft/client/renderer/Projection*.class' '*/ProjectionMatrix*.class' ; do
-            for f in $(cd /tmp/mc && find . -path "./$pat" -o -path "$pat" 2>/dev/null | sed 's|^\./||'); do
-              c=${f%.class}; c=${c//\//.}
-              echo "=== $c" >> api.txt
-              javap -p -cp "$CP" "$c" | grep -v 'lambda\$' >> api.txt 2>&1
-            done
-          done
-          echo "=== Entity invisible" >> api.txt
-          javap -p -cp "$CP" net.minecraft.world.entity.Entity | grep -i "invisib\|level()\|position()" >> api.txt
-          grep -rl --include=*.class -a "getProjectionMatrix\|projectionMatrix" /tmp/mc | sed 's|/tmp/mc/||' | head -20 >> api.txt
-
       - name: Client gametests (screenshots)
         id: gametest
         if: steps.build.outputs.code == '0'
@@ -90,17 +68,17 @@ jobs:
               --notes "OneKey for Minecraft 26.3 (Fabric). Put the same jar on the server and on the clients of the players who should get it."
           fi
 
-      - name: Publish CI notes
-        if: always()
+      - name: Publish screenshots to the test-shots branch
+        if: always() && github.event_name == 'push'
         run: |
           set +e
-          mkdir -p /tmp/report && cp build.log api.txt /tmp/report/; cp build/libs/*.jar /tmp/report/ 2>/dev/null; cp -r shots /tmp/report/ 2>/dev/null
-          grep -E "OneKeyTest|OneKey|ERROR|Exception|Mixin|mixin" gametest.log 2>/dev/null | grep -v "^\s*at " | head -300 > /tmp/report/gametest_excerpt.txt
-          cd /tmp/report
-          echo "build exit code: ${{ steps.build.outputs.code }} (${{ github.sha }})" > STATUS.txt
-          git init -q -b ci-notes && git config user.name ci && git config user.email ci@users.noreply.github.com
-          git add -A && git commit -qm "CI notes ${{ github.sha }}"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ci-notes
+          mkdir -p shots && cd shots
+          grep -E "OneKeyTest" ../gametest.log > test-log.txt 2>/dev/null
+          echo "Screenshots from the client gametests of ${GITHUB_SHA}" > README.md
+          git init -q -b test-shots && git config user.name ci && git config user.email ci@users.noreply.github.com
+          git add -A && git commit -qm "gametest screenshots for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" test-shots
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" --delete ci-notes 2>/dev/null || true
 
       - name: Fail if build failed
         if: steps.build.outputs.code != '0'
