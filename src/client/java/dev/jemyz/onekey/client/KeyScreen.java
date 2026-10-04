@@ -53,7 +53,7 @@ public final class KeyScreen extends Screen {
 
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-		this.extractBackground(graphics, mouseX, mouseY, delta);
+		// Screen draws the (blurred) background itself; drawing it twice crashes ("Can only blur once per frame")
 		super.extractRenderState(graphics, mouseX, mouseY, delta);
 
 		int cx = this.width / 2;
