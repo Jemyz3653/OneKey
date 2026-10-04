@@ -1,0 +1,22 @@
+{
+  "onekey.screen.title": "OneKey",
+  "onekey.screen.field": "Server key",
+  "onekey.screen.hint": "This server uses OneKey. Enter the key (an operator gets it with /OneKey).",
+  "onekey.screen.activate": "Activate",
+  "onekey.screen.later": "Not now",
+  "onekey.screen.checking": "Checking...",
+  "onekey.msg.activated": "OneKey activated: F7 boxes, F8 invisible players",
+  "onekey.msg.wrong": "Wrong key",
+  "onekey.msg.revoked": "OneKey was turned off by the server",
+  "onekey.msg.need_key": "OneKey is not active - press K to enter the key",
+  "onekey.msg.not_supported": "This server doesn't use OneKey",
+  "onekey.msg.boxes_on": "Player boxes: ON",
+  "onekey.msg.boxes_off": "Player boxes: OFF",
+  "onekey.msg.invisible_on": "Show invisible players: ON",
+  "onekey.msg.invisible_off": "Show invisible players: OFF",
+  "key.onekey.boxes": "Toggle player boxes",
+  "key.onekey.invisible": "Toggle invisible players",
+  "key.onekey.enter": "Enter server key",
+  "key.category.onekey.main": "OneKey",
+  "key.categories.onekey.main": "OneKey"
+}

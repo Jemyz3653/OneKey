@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "onekey",
+	"version": "${version}",
+	"name": "OneKey",
+	"description": "Server-authorised helper: the server prints a key (/OneKey); players who enter it see invisible players and get CS-style boxes around players. Does nothing on servers without OneKey.",
+	"authors": [
+		"Jemyz"
+	],
+	"contact": {
+		"sources": "https://github.com/Jemyz3653/OneKey"
+	},
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.jemyz.onekey.OneKey"
+		],
+		"client": [
+			"dev.jemyz.onekey.client.OneKeyClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "onekey.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

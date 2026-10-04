@@ -1,0 +1,22 @@
+{
+  "onekey.screen.title": "OneKey",
+  "onekey.screen.field": "Ключ сервера",
+  "onekey.screen.hint": "На этом сервере есть OneKey. Введите ключ (оператор узнаёт его командой /OneKey).",
+  "onekey.screen.activate": "Активировать",
+  "onekey.screen.later": "Не сейчас",
+  "onekey.screen.checking": "Проверка...",
+  "onekey.msg.activated": "OneKey активирован: F7 рамки, F8 невидимки",
+  "onekey.msg.wrong": "Неверный ключ",
+  "onekey.msg.revoked": "Сервер отключил OneKey",
+  "onekey.msg.need_key": "OneKey не активен — нажмите K, чтобы ввести ключ",
+  "onekey.msg.not_supported": "На этом сервере нет OneKey",
+  "onekey.msg.boxes_on": "Рамки игроков: ВКЛ",
+  "onekey.msg.boxes_off": "Рамки игроков: ВЫКЛ",
+  "onekey.msg.invisible_on": "Показ невидимых: ВКЛ",
+  "onekey.msg.invisible_off": "Показ невидимых: ВЫКЛ",
+  "key.onekey.boxes": "Рамки игроков",
+  "key.onekey.invisible": "Показ невидимых игроков",
+  "key.onekey.enter": "Ввести ключ сервера",
+  "key.category.onekey.main": "OneKey",
+  "key.categories.onekey.main": "OneKey"
+}
